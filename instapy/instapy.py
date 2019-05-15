@@ -1899,6 +1899,9 @@ class InstaPy:
                             '--> Image not liked: {}'.format(
                                 reason.encode('utf-8')))
                         inap_img += 1
+                        time.sleep(random.randint(0, 12))
+
+
 
                 except NoSuchElementException as err:
                     self.logger.error('Invalid Page: {}'.format(err))
