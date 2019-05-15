@@ -107,7 +107,8 @@ class InstaPy:
                  bypass_suspicious_attempt=False,
                  bypass_with_mobile=False,
                  multi_logs=True,
-                 split_db=False):
+                 split_db=False,
+                 image_language=None):
 
         cli_args = parse_cli_args()
         username = cli_args.username or username
@@ -145,6 +146,7 @@ class InstaPy:
         self.bypass_suspicious_attempt = bypass_suspicious_attempt
         self.bypass_with_mobile = bypass_with_mobile
         self.disable_image_load = disable_image_load
+        self.image_language = image_language
 
         self.username = username or os.environ.get('INSTA_USER')
         self.password = password or os.environ.get('INSTA_PW')
@@ -529,6 +531,11 @@ class InstaPy:
             self.aborting = True
 
         self.mandatory_words = tags or []
+
+        return self
+
+    def set_image_language(self, language):
+        self.image_language = language
 
         return self
 
@@ -1339,7 +1346,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger))
+                                   self.logger, image_language=self.image_language))
 
                     if not inappropriate and self.delimit_liking:
                         self.liking_approved = verify_liking(self.browser,
@@ -1546,7 +1553,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger))
+                                   self.logger, image_language=self.image_language))
                     if not inappropriate:
                         # validate user
                         validation, details = self.validate_user_call(
@@ -1682,6 +1689,7 @@ class InstaPy:
                      skip_top_posts=True,
                      use_smart_hashtags=False,
                      use_smart_location_hashtags=False,
+                     language=None,
                      interact=False,
                      randomize=False,
                      media=None):
@@ -1708,6 +1716,8 @@ class InstaPy:
         tags = [tag.strip() for tag in tags]
         tags = tags or []
         self.quotient_breach = False
+
+        self.language = language
 
         for index, tag in enumerate(tags):
             if self.quotient_breach:
@@ -1753,7 +1763,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger)
+                                   self.logger, image_language=self.image_language)
                     )
 
                     if not inappropriate and self.delimit_liking:
@@ -2029,7 +2039,8 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger))
+                                   self.logger,
+                                   image_language=self.language))
 
                     if not inappropriate and self.delimit_liking:
                         self.liking_approved = verify_liking(self.browser,
@@ -2282,7 +2293,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger))
+                                   self.logger, image_language=self.image_language))
                     track = "post"
 
                     if not inappropriate:
@@ -2574,7 +2585,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger))
+                                   self.logger, image_language=self.image_language))
 
                     if not inappropriate:
                         # after first image we roll again
@@ -3652,7 +3663,7 @@ class InstaPy:
                                 self.mandatory_character,
                                 self.check_character_set,
                                 self.ignore_if_contains,
-                                self.logger)
+                                self.logger, image_language=self.image_language)
 
                             if not inappropriate and self.delimit_liking:
                                 self.liking_approved = verify_liking(
@@ -4156,7 +4167,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger)
+                                   self.logger, image_language=self.image_language)
                     )
 
                     if not inappropriate:
@@ -4279,7 +4290,7 @@ class InstaPy:
                                    self.mandatory_character,
                                    self.check_character_set,
                                    self.ignore_if_contains,
-                                   self.logger)
+                                   self.logger, image_language=self.image_language)
                     )
 
                     if not inappropriate:
@@ -4400,7 +4411,7 @@ class InstaPy:
                                self.mandatory_character,
                                self.check_character_set,
                                self.ignore_if_contains,
-                               self.logger))
+                               self.logger, image_language=self.image_language))
 
                 if not inappropriate and self.delimit_liking:
                     self.liking_approved = verify_liking(self.browser,
@@ -4948,7 +4959,7 @@ class InstaPy:
                     self.mandatory_character,
                     self.check_character_set,
                     self.ignore_if_contains,
-                    self.logger)
+                    self.logger, image_language=self.image_language)
 
                 if inappropriate:
                     self.logger.info(
@@ -5289,7 +5300,7 @@ class InstaPy:
                                     self.mandatory_character,
                                     self.check_character_set,
                                     self.ignore_if_contains,
-                                    self.logger))
+                                    self.logger, image_language=self.image_language))
 
                     if user_name != self.username:
                         follow_state, msg = follow_user(self.browser,

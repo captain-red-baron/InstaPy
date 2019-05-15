@@ -22,6 +22,8 @@ from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
 
+from langdetect import detect as detect_language
+
 
 def get_links_from_feed(browser, amount, num_of_search, logger):
     """Fetches random number of links from feed and returns a list of links"""
@@ -120,7 +122,7 @@ def get_links_for_location(browser,
     if possible_posts is not None:
         possible_posts = possible_posts if not skip_top_posts else \
             possible_posts - len(
-            top_posts)
+                top_posts)
         amount = possible_posts if amount > possible_posts else amount
         # sometimes pages do not have the correct amount of posts as it is
         # written there, it may be cos of some posts is deleted but still
@@ -193,7 +195,7 @@ def get_links_for_location(browser,
                     else:
                         logger.info(
                             "'{}' location POSSIBLY has less images than "
-                                "desired:{} found:{}...".format(
+                            "desired:{} found:{}...".format(
                                 location, amount, len(links)))
                         break
             else:
@@ -284,7 +286,7 @@ def get_links_for_tag(browser,
     if possible_posts is not None:
         possible_posts = possible_posts if not skip_top_posts else \
             possible_posts - len(
-            top_posts)
+                top_posts)
         amount = possible_posts if amount > possible_posts else amount
     # sometimes pages do not have the correct amount of posts as it is
     # written there, it may be cos of some posts is deleted but still keeps
@@ -423,8 +425,8 @@ def get_links_for_username(browser,
 
     is_private = is_private_profile(browser, logger, following_status == 'Following')
     if (is_private is None
-        or (is_private is True and following_status not in ['Following', True])
-        or (following_status == 'Blocked')):
+            or (is_private is True and following_status not in ['Following', True])
+            or (following_status == 'Blocked')):
         logger.info('This user is private and we are not following')
         return False
 
@@ -486,7 +488,7 @@ def get_media_edge_comment_string(media):
 def check_link(browser, post_link, dont_like, mandatory_words,
                mandatory_language, mandatory_character,
                is_mandatory_character, check_character_set, ignore_if_contains,
-               logger):
+               logger, image_language=None):
     """
     Check the given link if it is appropriate
 
@@ -596,6 +598,7 @@ def check_link(browser, post_link, dont_like, mandatory_words,
             image_text = media['comments']['nodes']
             image_text = image_text[0]['text'] if image_text else None
 
+    """Check if the language of the post is """
     if image_text is None:
         image_text = "No description"
 
@@ -610,6 +613,11 @@ def check_link(browser, post_link, dont_like, mandatory_words,
             return True, user_name, is_video, 'Mandatory language not ' \
                                               'fulfilled', "Not mandatory " \
                                                            "language"
+    if image_language and not (detect_language(image_text) == image_language):
+        logger.info('Detected language was {}, different from {}'.format(detect_language(image_text), image_language))
+        return True, user_name, is_video, 'Image language criteria not ' \
+                                          'fulfilled', "Not mandatory " \
+                                                       "language"
 
     """Append location to image_text so we can search through both in one
     go."""
@@ -645,9 +653,9 @@ def check_link(browser, post_link, dont_like, mandatory_words,
         quash = re.search(dont_likes_regex, image_text, re.IGNORECASE)
         if quash:
             quashed = \
-            (((quash.group(0)).split('#')[1]).split(' ')[0]).split('\n')[
-                0].encode(
-                'utf-8')  # dismiss possible space and newlines
+                (((quash.group(0)).split('#')[1]).split(' ')[0]).split('\n')[
+                    0].encode(
+                    'utf-8')  # dismiss possible space and newlines
             iffy = ((re.split(r'\W+', dont_likes_regex))[
                         3] if dont_likes_regex.endswith(
                 '*([^\\d\\w]|$)') else  # 'word' without format
