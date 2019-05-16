@@ -115,3 +115,5 @@ Pipfile
 
 # Instances
 z_*
+
+credentials.py

@@ -7,15 +7,13 @@ import time
 from instapy import InstaPy
 from instapy import smart_run
 import logging
+from credentials import insta_password, insta_username
 
 logging.basicConfig(filename="like_by_tag_log.txt",
                 level=logging.INFO,
                 format='%(levelname)s: %(asctime)s %(message)s',
                 datefmt='%m/%d/%Y %I:%M:%S')
 
-# login credentials
-insta_username = 'aardapparel'
-insta_password = 'kaqteX-qytce1-tahdyk'
 
 dont_likes = ['sex', 'nude', 'naked', 'leather',
               'cream', 'hunt', 'gun', 'shoot', 'slaughter', 'pussy']
