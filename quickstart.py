@@ -1,34 +1,39 @@
-# login credentials
-insta_username = 'fantastic_nature_facts'
-insta_password = 'quqqom-sobcyj-2zoGci'
+"""
+This template is written by @timgrossmann
+
+What does this quickstart script aim to do?
+- This script is automatically executed every 6h on my server via cron
+"""
 import itertools
 import random
 import time
 from instapy import InstaPy
 from instapy import smart_run
 import logging
-from credentials import insta_password, insta_username
 
 logging.basicConfig(filename="like_by_tag_log.txt",
                 level=logging.INFO,
                 format='%(levelname)s: %(asctime)s %(message)s',
                 datefmt='%m/%d/%Y %I:%M:%S')
 
+# login credentials
+insta_username = 'fantastic_nature_facts'
+insta_password = 'quqqom-sobcyj-2zoGci'
 
 dont_likes = ['sex', 'nude', 'naked', 'leather',
               'cream', 'hunt', 'gun', 'shoot', 'slaughter', 'pussy']
 
 friends = ['list of friends I do not want to interact with']
 
-like_tag_list = ['eco', 'sustainable', 'sustainability', 'ecofashion', 'bio',
-                 'ethicalfashion', 'sustainablefashion', 'recycle', 'naturefacts']
+like_tag_list = ['naturefacts','eco', 'sustainable', 'sustainability', 'ecofashion', 'bio',
+                 'ethicalfashion', 'sustainablefashion', 'recycle']
 
 accounts = ['accounts with similar content']
 
-#wait_time = random.randint(0, 200)
-#logging.log(logging.INFO, 'waiting for {} to start'.format(str(wait_time)))
+wait_time = random.randint(0, 200)
+logging.log(logging.INFO, 'waiting for {} to start'.format(str(wait_time)))
 
-#time.sleep(wait_time)
+time.sleep(wait_time)
 
 
 # get a session!
@@ -49,25 +54,36 @@ with smart_run(session):
     session.set_do_like(enabled=True, percentage=100)
 
     raw_comments = [
-            ["Das Bild", "Dein Bild", "Der Shot", "Der Snapshot"],
-            ["ist", "ist wirklich"],
+            ["This", "The", "Your"],
+            ["photo", "picture", "pic", "shot", "snapshot"],
+            ["is", "looks", "feels", "is really"],
             [
-                "klasse",
+                "great",
                 "super",
-                "gut",
-                "sehr gut",
+                "good",
+                "very good",
                 "good",
                 "wow",
                 "WOW",
                 "cool",
-                "wundervoll",
-                "magisch",
-                "super cool",
+                "GREAT",
+                "magnificent",
+                "magical",
+                "very cool",
                 "stylish",
-                "super gelungen",
-                "so hübsch",
+                "beautiful",
+                "so beautiful",
                 "so stylish",
-                "so professionell"
+                "so professional",
+                "lovely",
+                "so lovely",
+                "very lovely",
+                "glorious",
+                "so glorious",
+                "very glorious",
+                "adorable",
+                "excellent",
+                "amazing",
             ]
         ]
 
@@ -77,7 +93,6 @@ with smart_run(session):
 
     session.set_do_comment(enabled=True, percentage=90)
     session.set_comments(comment_list)
-    session.set_image_language('de')
 
     # activity
     session.like_by_tags(like_tag_list, amount=random.randint(22, 28), interact=True, media='Photo',
